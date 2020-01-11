@@ -1,0 +1,6 @@
+{
+    "files.autoSave": "afterDelay",
+    "python.pythonPath": "~/quantenv/bin/python",
+    "git.ignoreLimitWarning": true,
+
+}
