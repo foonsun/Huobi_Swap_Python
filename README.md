@@ -58,7 +58,7 @@ ProjectName
 - symbol `string` 策略运行交易对
 - MARKETS `list` 策略使用的行情配置
 
-> 服务配置文件使用方式: [配置文件](../../docs/config/README.md)
+> 服务配置文件使用方式: [配置文件](/docs/config/README.md)
 
 
 #### 运行
