@@ -345,13 +345,12 @@ class HuobiSwapRestAPI:
             headers = {}
         if method == "GET":
             headers["Content-type"] = "application/x-www-form-urlencoded"
-            headers["User-Agent"] = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) " \
-                                    "Chrome/39.0.2171.71 Safari/537.36"
+            headers["User-Agent"] = "AlphaQuantByFoonsun"
             _, success, error = await AsyncHttpRequests.fetch("GET", url, params=params, headers=headers, timeout=10)
         else:
             headers["Accept"] = "application/json"
             headers["Content-type"] = "application/json"
-            headers["User-Agent"] = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:53.0) Gecko/20100101 Firefox/53.0"
+            headers["User-Agent"] = "AlphaQuantByFoonsun"
             _, success, error = await AsyncHttpRequests.fetch("POST", url, params=params, data=body, headers=headers,
                                                               timeout=10)
         if error:
