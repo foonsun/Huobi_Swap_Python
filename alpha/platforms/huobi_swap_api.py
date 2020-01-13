@@ -18,6 +18,7 @@ import hashlib
 import datetime
 import time
 from urllib.parse import urljoin
+from alpha.utils.request import AsyncHttpRequests
 
 
 __all__ = ("HuobiSwapRestAPI", )
@@ -345,12 +346,12 @@ class HuobiSwapRestAPI:
             headers = {}
         if method == "GET":
             headers["Content-type"] = "application/x-www-form-urlencoded"
-            headers["User-Agent"] = "AlphaQuantByFoonsun"
+            headers["User-Agent"] = "AlphaQuant1.0.0_200110_alpha"
             _, success, error = await AsyncHttpRequests.fetch("GET", url, params=params, headers=headers, timeout=10)
         else:
             headers["Accept"] = "application/json"
             headers["Content-type"] = "application/json"
-            headers["User-Agent"] = "AlphaQuantByFoonsun"
+            headers["User-Agent"] = "AlphaQuant1.0.0_200110_alpha"
             _, success, error = await AsyncHttpRequests.fetch("POST", url, params=params, data=body, headers=headers,
                                                               timeout=10)
         if error:

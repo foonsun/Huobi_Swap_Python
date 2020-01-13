@@ -13,6 +13,14 @@ import json
 import copy
 import datetime
 import time
+import urllib
+import hmac
+import base64
+import urllib
+import hashlib
+import datetime
+import time
+from urllib.parse import urljoin
 
 from alpha.asset import Asset
 from alpha.order import Order
@@ -98,7 +106,7 @@ class HuobiSwapTrade(Websocket):
         self._asset_update_callback = kwargs.get("asset_update_callback")
         self._init_success_callback = kwargs.get("init_success_callback")
 
-        url = self._wss + "/notification"
+        url = self._wss + "/swap-notification"
         super(HuobiSwapTrade, self).__init__(url, send_hb_interval=5)
 
         self._assets = {}  # Asset detail, {"BTC": {"free": "1.1", "locked": "2.2", "total": "3.3"}, ... }.
@@ -150,11 +158,25 @@ class HuobiSwapTrade(Websocket):
             "SignatureVersion": "2",
             "Timestamp": timestamp
         }
-        sign = self._rest_api.generate_signature("GET", data, "/notification")
+        sign = self.generate_signature("GET", data, "/notification")
         data["op"] = "auth"
         data["type"] = "api"
         data["Signature"] = sign
         await self.ws.send_json(data)
+    
+    def generate_signature(self, method, params, request_path):
+        host_url = urllib.parse.urlparse(self._wss).hostname.lower()
+        #host_url = "172.18.6.227:9090"
+        sorted_params = sorted(params.items(), key=lambda d: d[0], reverse=False)
+        encode_params = urllib.parse.urlencode(sorted_params)
+        payload = [method, host_url, request_path, encode_params]
+        payload = "\n".join(payload)
+        payload = payload.encode(encoding="UTF8")
+        secret_key = self._secret_key.encode(encoding="utf8")
+        digest = hmac.new(secret_key, payload, digestmod=hashlib.sha256).digest()
+        signature = base64.b64encode(digest)
+        signature = signature.decode()
+        return signature
 
     async def auth_callback(self, data):
         if data["err-code"] != 0:
@@ -230,11 +252,11 @@ class HuobiSwapTrade(Websocket):
             await self.sub_callback(data)
 
         elif op == "notify":
-            if data["topic"] == self._order_channel:
+            if data["topic"].startswith("orders"):
                 self._update_order(data)
-            elif data["topic"] == "positions":
+            elif data["topic"].startswith("positions"):
                 self._update_position(data)
-            elif data["topic"] == self._asset_channel:
+            elif data["topic"].startswith("accounts"):
                 self._update_asset(data)
 
     async def create_order(self, action, price, quantity, order_type=ORDER_TYPE_LIMIT, *args, **kwargs):
@@ -348,8 +370,10 @@ class HuobiSwapTrade(Websocket):
 
             quantity = abs(int(order["quantity"]))
 
+            client_order_id = order.get("client_order_id", "")
+
             orders_data.append({"contract_code": self._symbol, \
-                    "client_order_id": order["client_order_id"], "price": order["price"], "volume": quantity, "direction": direction, "offset": offset, \
+                    "client_order_id": client_order_id, "price": order["price"], "volume": quantity, "direction": direction, "offset": offset, \
                     "leverRate": lever_rate, "orderPriceType":  order_price_type})
 
         result, error = await self._rest_api.create_orders({"orders_data": orders_data})
@@ -515,7 +539,7 @@ class HuobiSwapTrade(Websocket):
             None.
         """
         assets = {}
-        for item in result["data"]:
+        for item in data["data"]:
             symbol = item["symbol"].upper()
             total = float(item["margin_balance"])
             free = float(item["margin_available"])
@@ -535,7 +559,7 @@ class HuobiSwapTrade(Websocket):
             "account": self._account,
             "assets": assets,
             "timestamp": tools.get_cur_timestamp_ms(),
-            "update": self.update
+            "update": update
         }
         asset = Asset(**info)
         self._assets = asset

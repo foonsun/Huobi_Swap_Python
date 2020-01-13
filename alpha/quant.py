@@ -15,6 +15,8 @@ import asyncio
 from alpha.utils import logger
 from alpha.config import config
 
+from alpha.const import VERSION
+
 
 class Quant:
     """ Asynchronous driven quantitative trading framework.
@@ -32,6 +34,7 @@ class Quant:
         self._get_event_loop()
         self._load_settings(config_module)
         self._init_logger()
+        self._get_version()
         self._do_heartbeat()
 
     def start(self):
@@ -48,6 +51,11 @@ class Quant:
         """Stop the event loop."""
         logger.info("stop io loop.", caller=self)
         self.loop.stop()
+
+    def _get_version(self):
+        """ get software version
+        """
+        logger.info("version:", VERSION, caller=self)
 
     def _get_event_loop(self):
         """ Get a main io loop. """

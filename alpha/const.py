@@ -10,6 +10,9 @@ Email:  andyjoe318@gmail.com
 
 from collections import deque
 
+# Version
+VERSION = "1.0.0_200110_alpha"
+
 # Exchange Names
 HUOBI_SWAP = "huobi_swap"  # Huobi Future https://www.hbdm.com/en-us/contract/exchange/
 

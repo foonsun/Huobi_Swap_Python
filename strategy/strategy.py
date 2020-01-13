@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 """
-简单卖平策略
+简单卖平策略，仅做演示使用
 
 Author: Qiaoxiaofeng
 Date:   2020/01/10
@@ -23,7 +23,8 @@ from alpha.asset import Asset
 from alpha.position import Position
 from alpha.error import Error
 from alpha.tasks import LoopRunTask
-from alpha.order import ORDER_ACTION_BUY, ORDER_STATUS_FAILED, ORDER_STATUS_CANCELED, ORDER_STATUS_FILLED
+from alpha.order import ORDER_ACTION_SELL, ORDER_ACTION_BUY, ORDER_STATUS_FAILED, ORDER_STATUS_CANCELED, ORDER_STATUS_FILLED,\
+    ORDER_TYPE_LIMIT, ORDER_TYPE_MARKET
 
 
 class MyStrategy:
@@ -55,6 +56,11 @@ class MyStrategy:
 
         self.raw_symbol = self.symbol.split('-')[0]
 
+        self.ask1_price = 0
+        self.bid1_price = 0
+        self.ask1_volume = 0
+        self.bid1_volume = 0
+
 
         # 交易模块
         cc = {
@@ -83,7 +89,7 @@ class MyStrategy:
             "orderbooks_length": self.orderbooks_length,
             "klines_length": self.klines_length,
             "trades_length": self.trades_length,
-            "wss": self.wss,
+            "wss": self.market_wss,
             "orderbook_update_callback": self.on_event_orderbook_update,
             "kline_update_callback": self.on_event_kline_update,
             "trade_update_callback": self.on_event_trade_update
@@ -149,10 +155,12 @@ class MyStrategy:
             本回调所传的orderbook是最新的单次orderbook。
         """
         logger.debug("orderbook:", orderbook, caller=self)
-        self.ask1_price = float(orderbook.asks[0][0])  # 卖一价格
-        self.ask1_volume = float(orderbook.asks[0][1])  # 卖一数量
-        self.bid1_price = float(orderbook.bids[0][0])  # 买一价格
-        self.bid1_volume = float(orderbook.bids[0][1])  # 买一数量
+        if orderbook.asks:
+            self.ask1_price = float(orderbook.asks[0][0])  # 卖一价格
+            self.ask1_volume = float(orderbook.asks[0][1])  # 卖一数量
+        if orderbook.bids:
+            self.bid1_price = float(orderbook.bids[0][0])  # 买一价格
+            self.bid1_volume = float(orderbook.bids[0][1])  # 买一数量
         self.last_orderbook_timestamp = orderbook.timestamp
 
     async def on_event_order_update(self, order: Order):

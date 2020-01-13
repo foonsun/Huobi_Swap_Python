@@ -54,7 +54,7 @@ class HuobiSwapMarket(Websocket):
         self._klines = deque(maxlen=self._klines_length)
         self._trades = deque(maxlen=self._trades_length)
 
-        url = self._wss + "/ws"
+        url = self._wss + "/swap-ws"
         super(HuobiSwapMarket, self).__init__(url, send_hb_interval=5)
         self.initialize()
     
@@ -187,14 +187,16 @@ class HuobiSwapMarket(Websocket):
         symbol = self._c_to_s[channel]
         d = data.get("tick")
         asks, bids = [], []
-        for item in d.get("asks")[:self._orderbook_length]:
-            price = "%.8f" % item[0]
-            quantity = "%.8f" % item[1]
-            asks.append([price, quantity])
-        for item in d.get("bids")[:self._orderbook_length]:
-            price = "%.8f" % item[0]
-            quantity = "%.8f" % item[1]
-            bids.append([price, quantity])
+        if d.get("asks"):
+            for item in d.get("asks")[:self._orderbook_length]:
+                price = "%.8f" % item[0]
+                quantity = "%.8f" % item[1]
+                asks.append([price, quantity])
+        if d.get("bids"):
+            for item in d.get("bids")[:self._orderbook_length]:
+                price = "%.8f" % item[0]
+                quantity = "%.8f" % item[1]
+                bids.append([price, quantity])
         info = {
             "platform": self._platform,
             "symbol": symbol,

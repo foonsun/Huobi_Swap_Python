@@ -1,10 +1,10 @@
 {
-    "SERVER_ID": "future_maker_strategy",
+    "SERVER_ID": "swap_maker_strategy",
     "LOG": {
         "console": true,
         "level": "INFO",
-        "path": "/data/logs/servers/future_maker_strategy",
-        "name": "future_maker_strategy.log",
+        "path": "/data/logs/servers/swap_maker_strategy",
+        "name": "swap_maker_strategy.log",
         "clear": true,
         "backup_count": 5
     },
@@ -12,10 +12,10 @@
         {
             "platform": "huobi_swap",
             "account": "account",
-            "host": "https://api.btcgateway.pro",
-            "wss": "wss://api.btcgateway.pro",
-            "access_key": "ACCESS KEY",
-            "secret_key": "SECRET KEY"
+            "host": "http://tao-swapcolo.btcquant.pro",
+            "wss": "wss://swap.btcquant.pro",
+            "access_key": "access_key",
+            "secret_key": "secret_key"
         }
     ],
     "MARKETS": [
@@ -28,11 +28,11 @@
             "orderbooks_length": 100,
             "klines_length": 100,
             "trades_length": 100,
-            "wss": "wss://api.btcgateway.pro"
+            "wss": "wss://swap.btcquant.pro"
 
         }
     ],
     "strategy": "my_test_strategy",
-    "symbol": "BTC_CQ",
+    "symbol": "BTC-USD",
     "contract_type": "SWAP"
 }

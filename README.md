@@ -71,3 +71,6 @@ python main.py config.json
 
 issue区发帖提问，请务必贴上完整描述以及完整log。
 
+## 参考
+TheNextQuant
+
