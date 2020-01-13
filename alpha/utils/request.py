@@ -2,10 +2,9 @@
 
 """
 Asynchronous HTTP Request Client.
-
-Author: QiaoXiaofeng
-Date:   2020/1/10
-Email:  andyjoe318@gmail.com
+Author: HuangTao
+Date:   2018/05/03
+Email:  huangtao@ifclover.com
 """
 
 import json

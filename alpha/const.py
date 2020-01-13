@@ -14,7 +14,7 @@ from collections import deque
 VERSION = "1.0.0_200110_alpha"
 
 # Exchange Names
-HUOBI_SWAP = "huobi_swap"  # Huobi Future https://www.hbdm.com/en-us/contract/exchange/
+HUOBI_SWAP = "huobi_swap"  # Huobi Swap https://huobiapi.github.io/docs/dm/v1/cn/#5ea2e0cde2
 
 # Market Types
 MARKET_TYPE_TRADE = "trade"
