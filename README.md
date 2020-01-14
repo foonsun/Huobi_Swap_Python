@@ -62,7 +62,7 @@ ProjectName
 
 #### Strategy Config
 
-Strategy config file [config.json](config.json)，其中:
+Strategy config file [config.json](config.json):
 
 - ACCOUNTS `list` your hdbm account name；
 - strategy `string` your strategy name;
