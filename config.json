@@ -12,8 +12,8 @@
         {
             "platform": "huobi_swap",
             "account": "account",
-            "host": "http://tao-swapcolo.btcquant.pro",
-            "wss": "wss://swap.btcquant.pro",
+            "host": "https://xxx.pro",
+            "wss": "wss://yyy.pro",
             "access_key": "access_key",
             "secret_key": "secret_key"
         }
@@ -28,7 +28,7 @@
             "orderbooks_length": 100,
             "klines_length": 100,
             "trades_length": 100,
-            "wss": "wss://swap.btcquant.pro"
+            "wss": "wss://yyy.pro"
 
         }
     ],

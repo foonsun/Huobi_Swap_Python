@@ -126,7 +126,7 @@ class MyStrategy:
         orders_data = []
         if self.trader.position and self.trader.position.short_quantity:
             # 平空单
-            price = self.ask1_price - 0.01
+            price = self.ask1_price - 0.1
             quantity = -self.trader.position.short_quantity
             action = ORDER_ACTION_BUY
             new_price = str(price)  # 将价格转换为字符串，保持精度
@@ -135,13 +135,15 @@ class MyStrategy:
                 self.last_ask_price = self.ask1_price
         if self.trader.assets and self.trader.assets.assets.get(self.raw_symbol):
             # 开空单
-            price = self.bid1_price + 0.01
-            quantity = - 1 #  空1张
-            action = ORDER_ACTION_SELL
-            new_price = str(price)  # 将价格转换为字符串，保持精度
-            if quantity:
-                orders_data.append({"price": new_price, "quantity": quantity, "action": action, "order_type": ORDER_TYPE_LIMIT, "lever_rate": 1})
-                self.last_bid_price = self.bid1_price
+            price = self.bid1_price + 0.1
+            volume = float(self.trader.assets.assets.get(self.raw_symbol).get("free")) * price // 100 
+            if volume >= 1:
+                quantity = - volume #  空1张
+                action = ORDER_ACTION_SELL
+                new_price = str(price)  # 将价格转换为字符串，保持精度
+                if quantity:
+                    orders_data.append({"price": new_price, "quantity": quantity, "action": action, "order_type": ORDER_TYPE_LIMIT, "lever_rate": 1})
+                    self.last_bid_price = self.bid1_price
 
         if orders_data:
             order_nos, error = await self.trader.create_orders(orders_data)
